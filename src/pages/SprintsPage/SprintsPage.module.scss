@@ -1,0 +1,26 @@
+@use '@/styles/globalColors' as *;
+
+.page { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.title { font-size: 28px; font-weight: 700; color: $color-text-primary; margin: 0 0 8px; }
+.subtitle { font-size: 16px; color: $color-text-muted; margin: 0; }
+
+.toolbar { display: flex; gap: 16px; margin-bottom: 24px; padding: 16px; }
+
+.loading, .empty { padding: 48px; text-align: center; color: $color-text-muted; }
+
+.sprintsList { display: flex; flex-direction: column; gap: 16px; }
+
+.sprintCard { padding: 20px; cursor: pointer; }
+.sprintHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; h3 { margin: 0 0 4px; font-size: 18px; font-weight: 600; color: $color-text-primary; } }
+.projectName { margin: 0; font-size: 13px; color: $color-text-muted; }
+.sprintGoal { color: $color-text-secondary; margin: 0 0 12px; font-size: 14px; }
+.sprintDates { font-size: 13px; color: $color-primary; margin-bottom: 16px; }
+
+.sprintProgress { }
+.progressInfo { display: flex; justify-content: space-between; font-size: 13px; color: $color-text-muted; margin-bottom: 8px; }
+.progressBar { height: 8px; background: $color-bg-tertiary; border-radius: 4px; overflow: hidden; }
+.progressFill { height: 100%; background: $gradient-primary; border-radius: 4px; transition: width 0.3s ease; }
+
+.form { display: flex; flex-direction: column; gap: 16px; }
+.modalFooter { display: flex; gap: 12px; justify-content: flex-end; }

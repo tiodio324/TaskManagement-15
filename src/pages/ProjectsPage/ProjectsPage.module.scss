@@ -1,0 +1,21 @@
+@use '@/styles/globalColors' as *;
+
+.page { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.title { font-size: 28px; font-weight: 700; color: $color-text-primary; margin: 0 0 8px; }
+.subtitle { font-size: 16px; color: $color-text-muted; margin: 0; }
+
+.loading { padding: 48px; text-align: center; color: $color-text-muted; }
+
+.projectsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+.projectCard { padding: 20px; cursor: pointer; }
+.projectHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; h3 { margin: 0; font-size: 18px; font-weight: 600; color: $color-text-primary; } }
+.projectDescription { color: $color-text-secondary; margin: 0 0 16px; font-size: 14px; line-height: 1.5; }
+.projectStats { display: flex; gap: 16px; font-size: 13px; color: $color-text-muted; margin-bottom: 12px; }
+
+.progressBar { height: 6px; background: $color-bg-tertiary; border-radius: 3px; overflow: hidden; }
+.progressFill { height: 100%; background: $gradient-primary; border-radius: 3px; transition: width 0.3s ease; }
+
+.form { display: flex; flex-direction: column; gap: 16px; }
+.modalFooter { display: flex; gap: 12px; justify-content: flex-end; }

@@ -1,0 +1,56 @@
+// Global Colors - Productive Blue-Orange Task Theme
+$color-primary-darkest: #1565C0;
+$color-primary-dark: #1976D2;
+$color-primary: #2196F3;
+$color-primary-medium: #42A5F5;
+$color-primary-light: #64B5F6;
+$color-primary-lighter: #90CAF9;
+$color-primary-lightest: #BBDEFB;
+
+$color-accent: #FF9800;
+$color-accent-light: #FFE0B2;
+$color-accent-warm: #F57C00;
+
+$color-bg-primary: #FAFCFE;
+$color-bg-secondary: #FFFFFF;
+$color-bg-tertiary: #E3F2FD;
+$color-bg-dark: #1565C0;
+
+$color-text-primary: #1A1A1A;
+$color-text-secondary: #424242;
+$color-text-muted: #757575;
+$color-text-light: #9E9E9E;
+$color-text-inverse: #FFFFFF;
+
+$color-success: #4CAF50;
+$color-success-light: #C8E6C9;
+$color-warning: #FF9800;
+$color-warning-light: #FFE0B2;
+$color-error: #F44336;
+$color-error-light: #FFCDD2;
+$color-info: #2196F3;
+$color-info-light: #BBDEFB;
+
+$color-border-primary: #BBDEFB;
+$color-border-light: #E3F2FD;
+$color-border-dark: #90CAF9;
+
+$color-shadow: rgba(21, 101, 192, 0.08);
+$color-shadow-medium: rgba(21, 101, 192, 0.12);
+$color-shadow-dark: rgba(21, 101, 192, 0.2);
+
+$gradient-primary: linear-gradient(135deg, $color-primary 0%, $color-accent 100%);
+$gradient-header: linear-gradient(180deg, $color-primary-darkest 0%, $color-primary-dark 100%);
+$gradient-card: linear-gradient(145deg, $color-bg-primary 0%, $color-bg-secondary 100%);
+
+:root {
+  --color-primary-darkest: #{$color-primary-darkest}; --color-primary-dark: #{$color-primary-dark}; --color-primary: #{$color-primary};
+  --color-primary-medium: #{$color-primary-medium}; --color-primary-light: #{$color-primary-light}; --color-primary-lighter: #{$color-primary-lighter}; --color-primary-lightest: #{$color-primary-lightest};
+  --color-accent: #{$color-accent}; --color-accent-light: #{$color-accent-light}; --color-accent-warm: #{$color-accent-warm};
+  --color-bg-primary: #{$color-bg-primary}; --color-bg-secondary: #{$color-bg-secondary}; --color-bg-tertiary: #{$color-bg-tertiary}; --color-bg-dark: #{$color-bg-dark};
+  --color-text-primary: #{$color-text-primary}; --color-text-secondary: #{$color-text-secondary}; --color-text-muted: #{$color-text-muted}; --color-text-light: #{$color-text-light}; --color-text-inverse: #{$color-text-inverse};
+  --color-success: #{$color-success}; --color-success-light: #{$color-success-light}; --color-warning: #{$color-warning}; --color-warning-light: #{$color-warning-light};
+  --color-error: #{$color-error}; --color-error-light: #{$color-error-light}; --color-info: #{$color-info}; --color-info-light: #{$color-info-light};
+  --color-border-primary: #{$color-border-primary}; --color-border-light: #{$color-border-light}; --color-border-dark: #{$color-border-dark};
+  --color-shadow: #{$color-shadow}; --color-shadow-medium: #{$color-shadow-medium}; --color-shadow-dark: #{$color-shadow-dark};
+}

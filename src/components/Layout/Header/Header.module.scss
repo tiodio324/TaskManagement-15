@@ -1,0 +1,135 @@
+@use '@/styles/globalColors' as *;
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.header {
+  @include flex-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $header-height;
+  padding: 0 $spacing-xl;
+  background: $gradient-header;
+  color: $color-text-inverse;
+  z-index: $z-fixed;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  
+  @include mobile {
+    padding: 0 $spacing-md;
+  }
+}
+
+.left {
+  @include flex-start;
+  gap: $spacing-md;
+}
+
+.menuButton {
+  display: none;
+  padding: $spacing-sm;
+  background: transparent;
+  border: none;
+  color: $color-text-inverse;
+  cursor: pointer;
+  border-radius: $radius-md;
+  transition: background $transition-fast;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  @include mobile-tablet {
+    display: flex;
+  }
+}
+
+.logo {
+  @include flex-start;
+  gap: $spacing-sm;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.logoIcon {
+  width: 28px;
+  height: 28px;
+  color: $color-accent;
+}
+
+.logoText {
+  font-family: $font-family-secondary;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.5px;
+  
+  @include mobile {
+    display: none;
+  }
+}
+
+.breadcrumb {
+  @include flex-start;
+  gap: $spacing-sm;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  @include mobile {
+    display: none;
+  }
+}
+
+.breadcrumbItem {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.breadcrumbSeparator {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.title {
+  font-family: $font-family-secondary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+}
+
+.right {
+  @include flex-start;
+  gap: $spacing-md;
+}
+
+.userInfo {
+  @include flex-start;
+  gap: $spacing-md;
+}
+
+.role {
+  font-size: $font-size-sm;
+  color: $color-text-inverse;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: $radius-full;
+  
+  @include mobile {
+    display: none;
+  }
+}
+
+.headerButton {
+  color: $color-accent !important;
+  border-color: $color-accent !important;
+  
+  &:hover {
+    background: rgba($color-accent, 0.1) !important;
+  }
+}

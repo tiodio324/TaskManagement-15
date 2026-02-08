@@ -1,0 +1,63 @@
+@use '@/styles/globalColors' as *;
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+// Task-Management: С левой цветной полосой (как задачи)
+.form {
+  @include flex-column;
+  gap: $spacing-lg;
+}
+
+.roleSelector {
+  @include flex-column;
+  gap: $spacing-md;
+}
+
+.roleButton {
+  @include flex-start;
+  gap: $spacing-md;
+  width: 100%;
+  padding: $spacing-lg;
+  background: $color-bg-primary;
+  border: 1px solid $color-border-light;
+  border-left: 5px solid $color-border-primary;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  svg {
+    width: 32px;
+    height: 32px;
+    color: $color-text-muted;
+    transition: all $transition-fast;
+  }
+  
+  span {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+  }
+  
+  &:hover {
+    border-left-color: $color-primary-light;
+    background: $color-bg-secondary;
+    transform: translateX(4px);
+    
+    svg { color: $color-primary; }
+  }
+  
+  &.active {
+    border-left-color: $color-primary;
+    border-left-width: 6px;
+    background: rgba($color-primary, 0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    
+    svg { color: $color-primary; }
+    span { color: $color-primary; font-weight: $font-weight-semibold; }
+  }
+}
+
+.actions {
+  @include flex-between;
+  gap: $spacing-md;
+}

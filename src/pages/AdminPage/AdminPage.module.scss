@@ -1,0 +1,76 @@
+@use '@/styles/globalColors' as *;
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page {
+  @include flex-column;
+  gap: $spacing-lg;
+}
+
+.header {
+  margin-bottom: $spacing-md;
+}
+
+.title {
+  @include heading-1;
+  margin: 0 0 $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: $color-text-muted;
+  margin: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: $spacing-xs;
+  padding: $spacing-xs;
+  background: $color-bg-tertiary;
+  border-radius: $radius-lg;
+  width: fit-content;
+}
+
+.tab {
+  padding: $spacing-sm $spacing-lg;
+  background: transparent;
+  border: none;
+  border-radius: $radius-md;
+  font-family: $font-family-secondary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover {
+    color: $color-text-primary;
+    background: rgba($color-bg-primary, 0.5);
+  }
+  
+  &.active {
+    background: $color-bg-primary;
+    color: $color-primary;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.toolbar {
+  padding: $spacing-md !important;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-xs;
+}
+
+.form {
+  @include flex-column;
+  gap: $spacing-md;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+}
