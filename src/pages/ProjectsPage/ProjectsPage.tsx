@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { dataStore, authStore, uiStore } from '@/store';
 import { Card, Button, Badge, Input, Modal, Select } from '@/components/UI';
 import type { Project, ProjectFormData, ProjectStatus } from '@/types';
+import { getDateMinYearError, getDateRangeError, getRequiredDateError, MIN_FORM_DATE } from '@/utils';
 import styles from './ProjectsPage.module.scss';
 
 export const ProjectsPage = observer(() => {
@@ -11,17 +12,28 @@ export const ProjectsPage = observer(() => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [form, setForm] = useState<ProjectFormData>({ name: '', description: '', status: 'planning', startDate: '', memberIds: [] });
+  const [dateErrors, setDateErrors] = useState<{ startDate?: string; endDate?: string }>({});
 
   useEffect(() => { loadAllData(); }, [loadAllData]);
 
   const statusLabels: Record<ProjectStatus, string> = { planning: 'Планирование', active: 'Активный', on_hold: 'Приостановлен', completed: 'Завершён', cancelled: 'Отменён' };
   const statusColors: Record<ProjectStatus, 'info' | 'success' | 'warning' | 'error'> = { planning: 'info', active: 'success', on_hold: 'warning', completed: 'success', cancelled: 'error' };
 
-  const openCreateModal = () => { setEditingProject(null); setForm({ name: '', description: '', status: 'planning', startDate: new Date().toISOString().split('T')[0], memberIds: [] }); setModalOpen(true); };
-  const openEditModal = (project: Project) => { setEditingProject(project); setForm({ name: project.name, description: project.description, status: project.status, startDate: project.startDate, endDate: project.endDate, memberIds: project.memberIds }); setModalOpen(true); };
+  const openCreateModal = () => { setEditingProject(null); setDateErrors({}); setForm({ name: '', description: '', status: 'planning', startDate: new Date().toISOString().split('T')[0], memberIds: [] }); setModalOpen(true); };
+  const openEditModal = (project: Project) => { setEditingProject(project); setDateErrors({}); setForm({ name: project.name, description: project.description, status: project.status, startDate: project.startDate, endDate: project.endDate, memberIds: project.memberIds }); setModalOpen(true); };
+
+  const validateDates = () => {
+    const nextErrors = {
+      startDate: getDateMinYearError(form.startDate, 'Дата начала'),
+      endDate: getRequiredDateError(form.endDate, 'Дата окончания') || getDateMinYearError(form.endDate, 'Дата окончания') || getDateRangeError(form.startDate, form.endDate),
+    };
+    setDateErrors(nextErrors);
+    return !nextErrors.startDate && !nextErrors.endDate;
+  };
 
   const handleSave = async () => {
     if (!form.name) { uiStore.showError('Введите название проекта'); return; }
+    if (!validateDates()) return;
     if (editingProject) { await updateProject(editingProject.id, form); uiStore.showSuccess('Проект обновлён'); }
     else { await createProject(form); uiStore.showSuccess('Проект создан'); }
     setModalOpen(false);
@@ -67,8 +79,8 @@ export const ProjectsPage = observer(() => {
           <Input label="Название *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input label="Описание" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <Select label="Статус" options={Object.entries(statusLabels).map(([v, l]) => ({ value: v, label: l }))} value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as ProjectStatus })} />
-          <Input label="Дата начала" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
-          <Input label="Дата окончания" type="date" value={form.endDate || ''} onChange={(e) => setForm({ ...form, endDate: e.target.value || undefined })} />
+          <Input label="Дата начала" type="date" min={MIN_FORM_DATE} value={form.startDate} error={dateErrors.startDate} onChange={(e) => { setDateErrors({ ...dateErrors, startDate: undefined }); setForm({ ...form, startDate: e.target.value }); }} />
+          <Input label="Дата окончания *" type="date" min={MIN_FORM_DATE} required value={form.endDate || ''} error={dateErrors.endDate} onChange={(e) => { setDateErrors({ ...dateErrors, endDate: undefined }); setForm({ ...form, endDate: e.target.value || undefined }); }} />
         </div>
       </Modal>
     </div>

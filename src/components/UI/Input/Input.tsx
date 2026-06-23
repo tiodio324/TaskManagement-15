@@ -44,6 +44,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
           {label}
         </label>
       )}
+      {error && <span className={styles.error}>{error}</span>}
       <div className={styles.inputContainer}>
         {leftIcon && <span className={styles.leftIcon}>{leftIcon}</span>}
         <input
@@ -54,7 +55,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
         />
         {rightIcon && <span className={styles.rightIcon}>{rightIcon}</span>}
       </div>
-      {error && <span className={styles.error}>{error}</span>}
       {hint && !error && <span className={styles.hint}>{hint}</span>}
     </div>
   );

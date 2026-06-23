@@ -5,6 +5,7 @@ import {
   Project, ProjectFormData,
   Sprint, SprintFormData,
   Member, MemberFormData,
+  MemberRole,
   Comment, CommentFormData,
   FilterParams 
 } from '@/types';
@@ -47,6 +48,42 @@ export class DataStore {
   get activeMembers(): Member[] {
     return this.members.filter(m => m.isActive).sort((a, b) => a.lastName.localeCompare(b.lastName, 'ru'));
   }
+
+  // Зарегистрированные пользователи (из localStorage) в виде Member-объектов.
+  // Реагирует на изменения через authStore.registeredUsersCache (MobX observable).
+  get registeredUsersAsMembers(): Member[] {
+    return authStore.registeredUsers.map(u => {
+      const parts = u.name.trim().split(/\s+/);
+      const firstName = parts[0] || u.name;
+      const lastName  = parts.slice(1).join(' ') || '';
+      return {
+        id:        u.id,
+        firstName,
+        lastName,
+        email:     u.email,
+        role:      'developer' as MemberRole,
+        isActive:  true,
+        createdAt: new Date(u.createdAt).toISOString(),
+        updatedAt: new Date(u.createdAt).toISOString(),
+      };
+    });
+  }
+
+  // Все активные участники: Firebase-члены + зарегистрированные пользователи.
+  // Дублирование по email исключается — Firebase-запись имеет приоритет.
+  get allActiveMembers(): Member[] {
+    const fbEmails = new Set(this.activeMembers.map(m => m.email.toLowerCase()));
+    const regOnly  = this.registeredUsersAsMembers.filter(
+      m => !fbEmails.has(m.email.toLowerCase()),
+    );
+    return [...this.activeMembers, ...regOnly].sort((a, b) =>
+      (a.lastName || a.firstName).localeCompare(b.lastName || b.firstName, 'ru'),
+    );
+  }
+
+  // Удаляет зарегистрированного пользователя из localStorage (только для admin)
+  deleteRegisteredMember = (userId: string): boolean =>
+    authStore.deleteRegisteredUser(userId);
 
   get filteredTasks(): Task[] {
     let result = this.activeTasks;
@@ -285,7 +322,17 @@ export class DataStore {
       return member;
     } catch { return null; }
   };
-
+updateMember = async (id: string, data: Partial<MemberFormData>): Promise<boolean> => {
+  if (!authStore.canManageMembers()) return false;
+  const index = this.members.findIndex(m => m.id === id);
+  if (index === -1) return false;
+  const updated: Member = { ...this.members[index], ...data, updatedAt: new Date().toISOString() };
+  try {
+    await FirebaseService.setData(`members/${id}`, updated);
+    runInAction(() => { this.members[index] = updated; });
+    return true;
+  } catch { return false; }
+};
   deleteMember = async (id: string): Promise<boolean> => {
     if (!authStore.canManageMembers()) return false;
     const index = this.members.findIndex(m => m.id === id);

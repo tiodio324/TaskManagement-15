@@ -113,16 +113,33 @@
   gap: $spacing-md;
 }
 
-.role {
-  font-size: $font-size-sm;
-  color: $color-text-inverse;
-  padding: $spacing-xs $spacing-sm;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: $radius-full;
-  
+// Блок с именем + ролью
+.userDetails {
+  @include flex-column;
+  gap: 2px;
+  align-items: flex-end;
+
   @include mobile {
     display: none;
   }
+}
+
+// Имя пользователя (или роль, если имени нет)
+.userName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-inverse;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Подпись роли под именем (показывается только если есть имя)
+.role {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
 }
 
 .headerButton {

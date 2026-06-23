@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { dataStore, authStore, uiStore } from '@/store';
 import { Card, Button, Badge, Select, Modal, Input } from '@/components/UI';
 import type { Sprint, SprintFormData, SprintStatus } from '@/types';
+import { getDateMinYearError, getDateRangeError, getRequiredDateError, MIN_FORM_DATE } from '@/utils';
 import styles from './SprintsPage.module.scss';
 
 export const SprintsPage = observer(() => {
@@ -11,6 +12,7 @@ export const SprintsPage = observer(() => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSprint, setEditingSprint] = useState<Sprint | null>(null);
   const [form, setForm] = useState<SprintFormData>({ projectId: '', name: '', goal: '', startDate: '', endDate: '', status: 'planning' });
+  const [dateErrors, setDateErrors] = useState<{ startDate?: string; endDate?: string }>({});
 
   useEffect(() => { loadAllData(); }, [loadAllData]);
 
@@ -20,11 +22,21 @@ export const SprintsPage = observer(() => {
   const filteredSprints = filters.projectId ? activeSprints.filter(s => s.projectId === filters.projectId) : activeSprints;
   const projectOptions = [{ value: '', label: 'Все проекты' }, ...activeProjects.map(p => ({ value: p.id, label: p.name }))];
 
-  const openCreateModal = () => { setEditingSprint(null); setForm({ projectId: activeProjects[0]?.id || '', name: '', goal: '', startDate: new Date().toISOString().split('T')[0], endDate: '', status: 'planning' }); setModalOpen(true); };
-  const openEditModal = (sprint: Sprint) => { setEditingSprint(sprint); setForm({ projectId: sprint.projectId, name: sprint.name, goal: sprint.goal, startDate: sprint.startDate, endDate: sprint.endDate, status: sprint.status }); setModalOpen(true); };
+  const openCreateModal = () => { setEditingSprint(null); setDateErrors({}); setForm({ projectId: activeProjects[0]?.id || '', name: '', goal: '', startDate: new Date().toISOString().split('T')[0], endDate: '', status: 'planning' }); setModalOpen(true); };
+  const openEditModal = (sprint: Sprint) => { setEditingSprint(sprint); setDateErrors({}); setForm({ projectId: sprint.projectId, name: sprint.name, goal: sprint.goal, startDate: sprint.startDate, endDate: sprint.endDate, status: sprint.status }); setModalOpen(true); };
+
+  const validateDates = () => {
+    const nextErrors = {
+      startDate: getDateMinYearError(form.startDate, 'Дата начала'),
+      endDate: getRequiredDateError(form.endDate, 'Дата окончания') || getDateMinYearError(form.endDate, 'Дата окончания') || getDateRangeError(form.startDate, form.endDate),
+    };
+    setDateErrors(nextErrors);
+    return !nextErrors.startDate && !nextErrors.endDate;
+  };
 
   const handleSave = async () => {
-    if (!form.name || !form.projectId || !form.endDate) { uiStore.showError('Заполните обязательные поля'); return; }
+    if (!form.name || !form.projectId || !form.startDate) { uiStore.showError('Заполните обязательные поля'); return; }
+    if (!validateDates()) return;
     if (editingSprint) { await updateSprint(editingSprint.id, form); uiStore.showSuccess('Спринт обновлён'); }
     else { await createSprint(form); uiStore.showSuccess('Спринт создан'); }
     setModalOpen(false);
@@ -75,8 +87,8 @@ export const SprintsPage = observer(() => {
           <Select label="Проект *" options={activeProjects.map(p => ({ value: p.id, label: p.name }))} value={form.projectId} onChange={(e) => setForm({ ...form, projectId: e.target.value })} />
           <Input label="Название *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input label="Цель спринта" value={form.goal} onChange={(e) => setForm({ ...form, goal: e.target.value })} />
-          <Input label="Дата начала *" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
-          <Input label="Дата окончания *" type="date" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} />
+          <Input label="Дата начала *" type="date" min={MIN_FORM_DATE} value={form.startDate} error={dateErrors.startDate} onChange={(e) => { setDateErrors({ ...dateErrors, startDate: undefined }); setForm({ ...form, startDate: e.target.value }); }} />
+          <Input label="Дата окончания *" type="date" min={MIN_FORM_DATE} required value={form.endDate} error={dateErrors.endDate} onChange={(e) => { setDateErrors({ ...dateErrors, endDate: undefined }); setForm({ ...form, endDate: e.target.value }); }} />
           <Select label="Статус" options={Object.entries(statusLabels).map(([v, l]) => ({ value: v, label: l }))} value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as SprintStatus })} />
         </div>
       </Modal>
